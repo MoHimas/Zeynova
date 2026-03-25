@@ -74,7 +74,7 @@ const UserDashboard = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         {/* Recent Orders Section */}
-        <div className="bg-gray-50 p-6 rounded-lg border">
+        <div className="bg-gray-50 p-4 sm:p-6 rounded-lg border">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-medium">Recent Orders</h2>
             <Link to="/orders" className="text-sm text-blue-600 hover:underline">View All</Link>
@@ -82,13 +82,15 @@ const UserDashboard = () => {
           {recentOrders.length > 0 ? (
             <div className="flex flex-col gap-4">
               {recentOrders.map((item, index) => (
-                <div key={index} className="flex items-center gap-4 bg-white p-3 rounded border">
-                  <img src={item.image[0]} className="w-12 h-12 object-cover" alt="" />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium truncate w-40 sm:w-auto">{item.name}</p>
-                    <p className="text-xs text-gray-500">{new Date(item.date).toDateString()}</p>
+                <div key={index} className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 bg-white p-3 rounded border">
+                  <div className="flex items-center gap-3 sm:gap-4 flex-1 overflow-hidden">
+                    <img src={item.image[0]} className="w-12 h-12 object-cover flex-shrink-0" alt="" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{item.name}</p>
+                      <p className="text-xs text-gray-500">{new Date(item.date).toDateString()}</p>
+                    </div>
                   </div>
-                  <div className="text-right">
+                  <div className="flex justify-between sm:block mt-2 sm:mt-0 text-left sm:text-right border-t sm:border-0 pt-2 sm:pt-0">
                     <p className="text-sm font-semibold">{currency}{item.price}</p>
                     <p className="text-[10px] text-green-600 font-bold uppercase">{item.status}</p>
                   </div>

@@ -111,7 +111,7 @@ const Navbar = () => {
 
       {/* sidebar menu for small screen */}
       <div
-        className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${
+        className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all z-50 ${
           visible ? "w-full" : "w-0"
         }`}
       >
@@ -151,6 +151,55 @@ const Navbar = () => {
           >
             CONTACT
           </NavLink>
+          {token ? (
+            <div className="flex flex-col">
+              <p className="py-2 pl-6 border bg-gray-50 text-gray-800 font-semibold mb-0">MY ACCOUNT</p>
+              <p
+                onClick={() => { setVisible(false); navigate("/dashboard"); }}
+                className="py-2 pl-8 border cursor-pointer m-0"
+              >
+                My Dashboard
+              </p>
+              <p
+                onClick={() => { setVisible(false); navigate("/profile"); }}
+                className="py-2 pl-8 border cursor-pointer m-0"
+              >
+                My Profile
+              </p>
+              <p
+                onClick={() => { setVisible(false); navigate("/wishlist"); }}
+                className="py-2 pl-8 border cursor-pointer m-0"
+              >
+                My Wishlist
+              </p>
+              <p
+                onClick={() => { setVisible(false); navigate("/orders"); }}
+                className="py-2 pl-8 border cursor-pointer m-0"
+              >
+                Orders
+              </p>
+              <p
+                onClick={() => { setVisible(false); navigate("/help-desk"); }}
+                className="py-2 pl-8 border cursor-pointer m-0"
+              >
+                Help Desk
+              </p>
+              <p
+                onClick={() => { setVisible(false); logout(); }}
+                className="py-2 pl-8 border cursor-pointer m-0 text-red-500"
+              >
+                Logout
+              </p>
+            </div>
+          ) : (
+            <NavLink
+              onClick={() => setVisible(false)}
+              className="py-2 pl-6 border"
+              to="/login"
+            >
+              LOGIN
+            </NavLink>
+          )}
         </div>
       </div>
     </div>

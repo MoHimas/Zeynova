@@ -152,7 +152,7 @@ const Profile = () => {
               />
             </div>
 
-            <div className="flex flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1 flex flex-col gap-1">
                 <label className="text-gray-600">City</label>
                 <input
@@ -185,7 +185,7 @@ const Profile = () => {
               </div>
             </div>
 
-            <div className="flex flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1 flex flex-col gap-1">
                 <label className="text-gray-600">Zip Code</label>
                 <input
@@ -220,7 +220,7 @@ const Profile = () => {
             
             <div className="flex flex-col gap-1">
               <label className="text-gray-600 font-medium">Payment Preferences</label>
-              <div className="flex flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1 flex flex-col gap-1">
                   <label className="text-xs text-gray-500">Method (e.g. Card, PayPal)</label>
                   <input
@@ -256,7 +256,7 @@ const Profile = () => {
               </div>
             </div>
 
-            <div className="flex gap-4 mt-4">
+            <div className="flex flex-col sm:flex-row gap-4 mt-4">
               {isEditing ? (
                 <>
                   <button
