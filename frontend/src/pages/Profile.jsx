@@ -91,7 +91,7 @@ const Profile = () => {
   return (
     <div className="border-t pt-10">
       <div className="text-2xl">
-        <Title text1={"MY"} text2={"PROFILE"} />
+        <Title text1={"MY "} text2={"PROFILE"} />
       </div>
 
       <div className="mt-10 flex flex-col md:flex-row gap-10">

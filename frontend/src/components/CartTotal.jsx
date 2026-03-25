@@ -3,7 +3,23 @@ import { ShopContext } from "../context/ShopContext";
 import Title from "./Title";
 
 const CartTotal = () => {
-  const { currency, delivery_fee, getCartAmount } = useContext(ShopContext);
+  const { currency, delivery_fee, getCartAmount, products, cartItems } = useContext(ShopContext);
+
+  let originalAmount = 0;
+  for (const items in cartItems) {
+    let itemInfo = products.find((product) => product._id === items);
+    if (!itemInfo) continue;
+    for (const item in cartItems[items]) {
+      try {
+        if (cartItems[items][item] > 0) {
+          originalAmount += itemInfo.price * cartItems[items][item];
+        }
+      } catch (error) {}
+    }
+  }
+
+  const cartAmount = getCartAmount();
+  const discount = originalAmount - cartAmount;
 
   return (
     <div className="w-full">
@@ -15,9 +31,21 @@ const CartTotal = () => {
           <p>Subtotal</p>
           <p>
             {currency}
-            {getCartAmount()}.00
+            {originalAmount}.00
           </p>
         </div>
+        {discount > 0 && (
+          <>
+            <hr />
+            <div className="flex justify-between text-orange-600">
+              <p>Discount</p>
+              <p>
+                -{currency}
+                {discount}.00
+              </p>
+            </div>
+          </>
+        )}
         <hr />
         <div className="flex justify-between">
           <p>Shipping Fee</p>
@@ -31,7 +59,7 @@ const CartTotal = () => {
           <b>Total</b>
           <b>
             {currency}
-            {getCartAmount() === 0 ? 0 : getCartAmount() + delivery_fee}.00
+            {cartAmount === 0 ? 0 : cartAmount + delivery_fee}.00
           </b>
         </div>
       </div>

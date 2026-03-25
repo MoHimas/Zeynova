@@ -24,7 +24,7 @@ const Productitem = ({ id, image, name, price, stock, offerPrice }) => {
           </p>
         )}
       </div>
-      <p className="pt-3 pb-1 text-sm h-[40px] overflow-hidden">{name}</p>
+      <p className="pt-3 pb-1 text-sm">{name}</p>
       <div className="flex items-center gap-2">
         <p className={`text-sm font-medium ${offerPrice > 0 ? "text-orange-600" : ""}`}>
           {currency}

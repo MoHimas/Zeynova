@@ -39,6 +39,12 @@ const ShopContextProvider = (props) => {
       return;
     }
 
+    const itemInfo = products.find((product) => product._id === itemId);
+    if (itemInfo && itemInfo.stock <= 0) {
+      toast.error("This product is out of stock");
+      return;
+    }
+
     let cartData = structuredClone(cartItems);
 
     if (cartData[itemId]) {

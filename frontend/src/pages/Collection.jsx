@@ -12,9 +12,10 @@ const Collection = () => {
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
   const [brand, setBrand] = useState([]);
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 });
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 2000 });
   const [sortType, setSortType] = useState("relevent");
   const [inStockOnly, setInStockOnly] = useState(false);
+  const [outOfStockOnly, setOutOfStockOnly] = useState(false);
 
   const toggleCategory = (e) => {
     if (category.includes(e.target.value)) {
@@ -71,9 +72,10 @@ const Collection = () => {
     productsCopy = productsCopy.filter(
       (item) => item.price >= priceRange.min && item.price <= priceRange.max
     );
-    
-    if (inStockOnly) {
+    if (inStockOnly && !outOfStockOnly) {
       productsCopy = productsCopy.filter((item) => item.stock > 0);
+    } else if (!inStockOnly && outOfStockOnly) {
+      productsCopy = productsCopy.filter((item) => item.stock <= 0 || !item.stock);
     }
 
     setFilterProducts(productsCopy);
@@ -97,7 +99,7 @@ const Collection = () => {
 
   useEffect(() => {
     applyFilter();
-  }, [category, subCategory, brand, priceRange, search, showSearch, products, inStockOnly]);
+  }, [category, subCategory, brand, priceRange, search, showSearch, products, inStockOnly, outOfStockOnly]);
 
   useEffect(() => {
     sortProduct();
@@ -191,10 +193,18 @@ const Collection = () => {
               />{" "}
               In Stock Only
             </p>
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                type="checkbox"
+                checked={outOfStockOnly}
+                onChange={() => setOutOfStockOnly(!outOfStockOnly)}
+              />{" "}
+              Out of Stock
+            </p>
           </div>
         </div>
 
-        {/* Price filter */}
         <div
           className={`border border-gray-300 pl-3 py-3 mt-6 ${
             showFilter ? "" : "hidden"
@@ -202,17 +212,32 @@ const Collection = () => {
         >
           <p className="mb-3 text-sm font-medium ">PRICE RANGE</p>
           <div className="flex flex-col gap-2 text-sm font-light text-gray-700 pr-3">
-             <div className="flex justify-between text-xs">
-                <span>${priceRange.min}</span>
-                <span>${priceRange.max}</span>
+             <div className="flex justify-between text-xs mb-1">
+                <span>Min: ${priceRange.min}</span>
+                <span>Max: ${priceRange.max}</span>
              </div>
              <input 
                 type="range" 
                 min="0" 
-                max="5000" 
+                max="2000" 
+                step="10"
+                value={priceRange.min}
+                onChange={(e) => {
+                   const val = Number(e.target.value);
+                   if (val <= priceRange.max) setPriceRange({ ...priceRange, min: val });
+                }}
+                className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black mb-3"
+             />
+             <input 
+                type="range" 
+                min="0" 
+                max="2000" 
                 step="10"
                 value={priceRange.max}
-                onChange={(e) => setPriceRange({ ...priceRange, max: Number(e.target.value) })}
+                onChange={(e) => {
+                   const val = Number(e.target.value);
+                   if (val >= priceRange.min) setPriceRange({ ...priceRange, max: val });
+                }}
                 className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
              />
           </div>

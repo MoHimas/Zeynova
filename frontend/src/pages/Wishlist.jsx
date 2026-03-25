@@ -29,7 +29,7 @@ const Wishlist = () => {
   return (
     <div className="border-t pt-10">
       <div className="text-2xl mb-8">
-        <Title text1={"MY"} text2={"WISH LIST"} />
+        <Title text1={"MY "} text2={"WISH LIST"} />
       </div>
 
       {wishlistItems.length > 0 ? (

@@ -18,6 +18,8 @@ import Profile from "./pages/Profile";
 import HelpDesk from "./pages/HelpDesk";
 import Wishlist from "./pages/Wishlist";
 import UserDashboard from "./pages/UserDashboard";
+import Delivery from "./pages/Delivery";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 const App = () => {
   return (
@@ -40,6 +42,8 @@ const App = () => {
         <Route path="/help-desk" element={<HelpDesk />} />
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/dashboard" element={<UserDashboard />} />
+        <Route path="/delivery" element={<Delivery />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
       </Routes>
       <Footer />
     </div>

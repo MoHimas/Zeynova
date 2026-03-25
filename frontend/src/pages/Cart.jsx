@@ -51,18 +51,26 @@ const Cart = () => {
                   alt=""
                 />
                 <div>
-                  <p className="text-sm sm:text-lg font-medium">
+                  <div className="text-sm sm:text-lg font-medium">
                     {productData.name}
                     <div className="flex items-center gap-5 mt-2">
-                      <p>
-                        {currency}
-                        {productData.price}
-                      </p>
+                      <div className="flex items-baseline gap-2">
+                        <p className={productData.offerPrice > 0 ? "text-orange-600 font-semibold" : ""}>
+                          {currency}
+                          {productData.offerPrice > 0 ? productData.offerPrice : productData.price}
+                        </p>
+                        {productData.offerPrice > 0 && (
+                          <p className="text-xs text-gray-400 line-through">
+                            {currency}
+                            {productData.price}
+                          </p>
+                        )}
+                      </div>
                       <p className="px-2 sm:px-3 sm:py-1 border bg-slate-50">
                         {item.size}
                       </p>
                     </div>
-                  </p>
+                  </div>
                 </div>
               </div>
               <input

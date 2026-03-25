@@ -124,7 +124,7 @@ const UserDashboard = () => {
       {/* Promotions Section */}
       <div className="mt-16">
         <div className="text-2xl mb-6">
-          <Title text1={"ACTIVE"} text2={"PROMOTIONS"} />
+          <Title text1={"ACTIVE "} text2={"PROMOTIONS"} />
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {promotions.map((item, index) => (

@@ -63,7 +63,7 @@ const HelpDesk = () => {
   return (
     <div className="border-t pt-10">
       <div className="text-2xl">
-        <Title text1={"HELP"} text2={"DESK"} />
+        <Title text1={"HELP "} text2={"DESK"} />
       </div>
 
       <div className="flex flex-col lg:flex-row gap-12 mt-10">

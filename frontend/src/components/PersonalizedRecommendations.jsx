@@ -27,12 +27,12 @@ const PersonalizedRecommendations = () => {
           recommended = [...new Set([...recommended, ...bestsellers])];
         }
 
-        setTitle({ text1: "RECOMMENDED", text2: "FOR YOU" });
+        setTitle({ text1: "RECOMMENDED ", text2: "FOR YOU" });
         setRecommendations(recommended.slice(0, 5));
       } else {
         // Fallback for guest or new users: Best Sellers
         const bestsellers = products.filter(p => p.bestseller);
-        setTitle({ text1: "TRENDING", text2: "FOR YOU" });
+        setTitle({ text1: "TRENDING ", text2: "FOR YOU" });
         setRecommendations(bestsellers.slice(0, 5));
       }
     }
