@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const Dashboard = ({ token, backendUrl, currency }) => {
   const [stats, setStats] = useState(null);
@@ -23,31 +25,62 @@ const Dashboard = ({ token, backendUrl, currency }) => {
     }
   };
 
-  const downloadCSV = () => {
-    if (!stats || !stats.recentOrders) return;
+  const downloadPDF = () => {
+    if (!stats) return;
 
-    const headers = ["Order ID", "Customer", "Date", "Amount", "Status", "Payment Method"].join(",");
-    const rows = stats.recentOrders.map(order => {
-      return [
-        order._id,
-        `"${order.address?.firstName} ${order.address?.lastName}"`,
-        new Date(order.date).toLocaleDateString(),
-        order.amount,
-        order.status,
-        order.paymentMethod
-      ].join(",");
-    });
+    const doc = new jsPDF();
 
-    const csvContent = [headers, ...rows].join("\n");
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", `sales_report_${new Date().toLocaleDateString()}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Title
+    doc.setFontSize(18);
+    doc.text("Sales & Business Report", 14, 22);
+    
+    // Date
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 30);
+
+    // Business Summary
+    doc.setFontSize(14);
+    doc.setTextColor(0);
+    doc.text("Business Overview", 14, 45);
+
+    doc.setFontSize(11);
+    doc.text(`Total Revenue: ${currency}${stats.totalRevenue?.toFixed(2) || 0}`, 14, 55);
+    doc.text(`Total Orders: ${stats.totalOrders || 0}`, 14, 62);
+    doc.text(`Total Products: ${stats.totalProducts || 0}`, 14, 69);
+    doc.text(`Total Customers: ${stats.totalUsers || 0}`, 14, 76);
+
+    // Recent Orders Table
+    if (stats.recentOrders && stats.recentOrders.length > 0) {
+      doc.setFontSize(14);
+      doc.text("Recent Orders", 14, 90);
+
+      const tableColumn = ["Order ID", "Customer", "Date", "Amount", "Status", "Payment Method"];
+      const tableRows = [];
+
+      stats.recentOrders.forEach(order => {
+        const orderData = [
+          order._id,
+          `${order.address?.firstName || ''} ${order.address?.lastName || ''}`,
+          new Date(order.date).toLocaleDateString(),
+          `${currency}${order.amount || 0}`,
+          order.status || '',
+          order.paymentMethod || ''
+        ];
+        tableRows.push(orderData);
+      });
+
+      autoTable(doc, {
+        head: [tableColumn],
+        body: tableRows,
+        startY: 95,
+        theme: 'striped',
+        styles: { fontSize: 9, cellPadding: 3 },
+        headStyles: { fillColor: [41, 128, 185], textColor: 255 }
+      });
+    }
+
+    doc.save(`sales_report_${new Date().toLocaleDateString().replace(/\//g, '-')}.pdf`);
   };
 
   useEffect(() => {
@@ -61,10 +94,10 @@ const Dashboard = ({ token, backendUrl, currency }) => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-medium">Business Overview & Reports</h2>
         <button 
-          onClick={downloadCSV}
+          onClick={downloadPDF}
           className="bg-black text-white px-4 py-2 text-sm rounded hover:bg-gray-800 transition-colors"
         >
-          GENERATE SALES REPORT (CSV)
+          GENERATE SALES REPORT (PDF)
         </button>
       </div>
       

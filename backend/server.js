@@ -1,6 +1,9 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
+import helmet from "helmet";
+import mongoSanitize from "express-mongo-sanitize";
+import rateLimit from "express-rate-limit";
 import connectDB from "./config/mongodb.js";
 import connectCloudinary from "./config/cloudinary.js";
 import userRouter from "./routes/userRoute.js";
@@ -17,12 +20,46 @@ const port = process.env.PORT || 4000;
 connectDB();
 connectCloudinary();
 
-// middlewares
-app.use(express.json());
-app.use(cors());
+// security middlewares
+app.use(helmet());
+app.use(mongoSanitize());
+
+// rate limiter for auth routes (login/register)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20,
+  message: { success: false, message: "Too many requests, please try again later." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// CORS - restrict to allowed origins
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  process.env.FRONTEND_URL,
+  process.env.ADMIN_URL,
+].filter(Boolean);
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // allow requests with no origin (mobile apps, curl, etc.)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
+// body parser with size limit
+app.use(express.json({ limit: "10kb" }));
 
 // api endpoints
-app.use("/api/user", userRouter);
+app.use("/api/user", authLimiter, userRouter);
 app.use("/api/product", productRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);

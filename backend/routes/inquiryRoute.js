@@ -6,8 +6,8 @@ import adminAuth from "../middleware/adminAuth.js";
 
 const inquiryRouter = express.Router();
 
-// Submit an inquiry (Customer)
-inquiryRouter.post("/submit", authUser, async (req, res) => {
+// Submit an inquiry (Customer only)
+inquiryRouter.post("/submit", authUser, roleAuth(["customer"]), async (req, res) => {
   try {
     const { subject, message } = req.body;
     const userId = req.user._id;
@@ -22,8 +22,8 @@ inquiryRouter.post("/submit", authUser, async (req, res) => {
   }
 });
 
-// Get user inquiries (Customer)
-inquiryRouter.get("/my-inquiries", authUser, async (req, res) => {
+// Get user inquiries (Customer only)
+inquiryRouter.get("/my-inquiries", authUser, roleAuth(["customer"]), async (req, res) => {
   try {
     const inquiries = await inquiryModel.find({ userId: req.user._id });
     res.json({ success: true, inquiries });
@@ -36,7 +36,8 @@ inquiryRouter.get("/my-inquiries", authUser, async (req, res) => {
 // Get all inquiries (Admin/Support)
 inquiryRouter.get(
   "/all",
-  adminAuth,
+  authUser,
+  roleAuth(["admin", "support"]),
   async (req, res) => {
     try {
       const inquiries = await inquiryModel
@@ -53,7 +54,8 @@ inquiryRouter.get(
 // Respond to inquiry (Admin/Support)
 inquiryRouter.post(
   "/respond",
-  adminAuth,
+  authUser,
+  roleAuth(["admin", "support"]),
   async (req, res) => {
     try {
       const { inquiryId, response, status } = req.body;

@@ -51,19 +51,20 @@ const List = ({ token }) => {
       <p className="mb-2">All Products List</p>
       <div className="flex flex-col gap-2">
         {/* list table title */}
-        <div className="hidden md:grid grid-cols-[1fr_3fr_1fr_1fr_1fr_0.5fr_0.5fr] items-center py-1 px-1 border bg-gray-100 text-sm">
+        <div className="hidden md:grid grid-cols-[1fr_3fr_1fr_1fr_1fr_0.5fr_0.5fr_0.5fr] items-center py-1 px-1 border bg-gray-100 text-sm">
           <b>Image</b>
           <b>Name</b>
           <b>Category</b>
           <b>Price</b>
           <b>Offer</b>
+          <b className="text-center">Stock</b>
           <b className="text-center">Edit</b>
           <b className="text-center">Remove</b>
         </div>
         {/* product list */}
         {list.map((item, index) => (
           <div
-            className="grid grid-cols-[1fr_3fr_1fr] md:grid-cols-[1fr_3fr_1fr_1fr_1fr_0.5fr_0.5fr] items-center gap-2 py-1 px-2 border text-sm"
+            className="grid grid-cols-[1fr_3fr_1fr] md:grid-cols-[1fr_3fr_1fr_1fr_1fr_0.5fr_0.5fr_0.5fr] items-center gap-2 py-1 px-2 border text-sm"
             key={index}
           >
             <img className="w-full" src={item.image[0]} alt="" />
@@ -76,6 +77,7 @@ const List = ({ token }) => {
             <p>
               {item.offerPrice ? `${currency}${item.offerPrice}` : "-"}
             </p>
+            <p className="text-center">{item.stock ?? 0}</p>
             <Link to={`/edit/${item._id}`} className="text-center cursor-pointer text-blue-500 hover:underline">
               Edit
             </Link>

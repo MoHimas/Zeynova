@@ -2,11 +2,12 @@ import express from "express";
 import reviewModel from "../models/reviewModel.js";
 import productModel from "../models/productModel.js";
 import authUser from "../middleware/auth.js";
+import roleAuth from "../middleware/roleAuth.js";
 
 const reviewRouter = express.Router();
 
-// Add a review
-reviewRouter.post("/add", authUser, async (req, res) => {
+// Add a review (customer only)
+reviewRouter.post("/add", authUser, roleAuth(["customer"]), async (req, res) => {
   try {
     const { productId, rating, comment } = req.body;
     const userId = req.user._id;

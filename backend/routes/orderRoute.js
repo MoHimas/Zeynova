@@ -9,6 +9,7 @@ import {
 } from "../controllers/orderController.js";
 import adminAuth from "../middleware/adminAuth.js";
 import authUser from "../middleware/auth.js";
+import roleAuth from "../middleware/roleAuth.js";
 
 const orderRouter = express.Router();
 
@@ -16,14 +17,14 @@ const orderRouter = express.Router();
 orderRouter.post("/list", adminAuth, allOrders);
 orderRouter.post("/status", adminAuth, updateStatus);
 
-// payment features
-orderRouter.post("/place", authUser, placeOrder);
-orderRouter.post("/stripe", authUser, placeOrderStripe);
+// payment features (customer only)
+orderRouter.post("/place", authUser, roleAuth(["customer"]), placeOrder);
+orderRouter.post("/stripe", authUser, roleAuth(["customer"]), placeOrderStripe);
 
-// user features
-orderRouter.post("/userorders", authUser, userOrders);
+// user features (customer only)
+orderRouter.post("/userorders", authUser, roleAuth(["customer"]), userOrders);
 
-// verify payment
-orderRouter.post("/verifyStripe", authUser, verifyStripe);
+// verify payment (customer only)
+orderRouter.post("/verifyStripe", authUser, roleAuth(["customer"]), verifyStripe);
 
 export default orderRouter;

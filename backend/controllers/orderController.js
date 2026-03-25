@@ -1,5 +1,6 @@
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
+import productModel from "../models/productModel.js";
 import Stripe from "stripe";
 
 // global variables
@@ -8,6 +9,15 @@ const deliveryCharge = 10;
 
 // gateway initialise
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+// helper: reduce stock for each item in the order
+const reduceStock = async (items) => {
+  for (const item of items) {
+    await productModel.findByIdAndUpdate(item._id, {
+      $inc: { stock: -(item.quantity) },
+    });
+  }
+};
 
 // placing order using COD method
 const placeOrder = async (req, res) => {
@@ -26,6 +36,9 @@ const placeOrder = async (req, res) => {
 
     const newOrder = new orderModel(orderData);
     await newOrder.save();
+
+    // reduce stock for COD orders immediately
+    await reduceStock(items);
 
     await userModel.findByIdAndUpdate(userId, { cartData: {} });
 
@@ -106,9 +119,16 @@ const verifyStripe = async (req, res) => {
   const { orderId, success, userId } = req.body;
   try {
     if (success === "true") {
+      const order = await orderModel.findById(orderId);
       await orderModel.findByIdAndUpdate(orderId, {
         payment: true,
       });
+
+      // reduce stock after successful Stripe payment
+      if (order && order.items) {
+        await reduceStock(order.items);
+      }
+
       await userModel.findByIdAndUpdate(userId, { cartData: {} });
       res.json({
         success: true,
