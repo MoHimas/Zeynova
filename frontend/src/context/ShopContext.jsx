@@ -26,6 +26,8 @@ const ShopContextProvider = (props) => {
       );
       if (response.data.success) {
         setUserProfile(response.data.user);
+      } else {
+        toast.error(response.data.message || "Failed to fetch profile");
       }
     } catch (error) {
       console.log(error);
@@ -149,6 +151,8 @@ const ShopContextProvider = (props) => {
       );
       if (response.data.success) {
         setCartItems(response.data.cartData);
+      } else {
+        toast.error(response.data.message || "Failed to fetch cart");
       }
     } catch (error) {
       console.log(error);
@@ -164,24 +168,36 @@ const ShopContextProvider = (props) => {
     const storedToken = localStorage.getItem("token");
     if (storedToken && storedToken !== "null" && storedToken !== "undefined") {
       setToken(storedToken);
-      getUserCart(storedToken);
-      fetchUserProfile(storedToken);
     }
   }, []);
+
+  useEffect(() => {
+    if (token) {
+      getUserCart(token);
+      fetchUserProfile(token);
+    } else {
+      setUserProfile(null);
+      setCartItems({});
+    }
+  }, [token]);
 
   const toggleWishlist = async (productId) => {
     if (!token) {
       toast.error("Please Login to add product to Wishlist");
       return;
     }
+    if (!userProfile) {
+      toast.info("Loading profile details, please wait...");
+      return;
+    }
     try {
       const response = await axios.post(
         backendUrl + "/api/user/update-profile",
-        { 
+        {
           userId: userProfile._id,
-          wishlist: userProfile.wishlist.includes(productId)
-            ? userProfile.wishlist.filter(id => id !== productId)
-            : [...userProfile.wishlist, productId]
+          wishlist: userProfile.wishlist?.includes(productId)
+            ? userProfile.wishlist.filter((id) => id !== productId)
+            : [...(userProfile.wishlist || []), productId],
         },
         { headers: { token } }
       );

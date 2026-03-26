@@ -47,7 +47,7 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (token) {
+    if (token && currentState === "Login") {
       navigate("/");
     }
   }, [token]);
