@@ -4,7 +4,7 @@ import { useState } from "react";
 import { backendUrl } from "../App";
 import { toast } from "react-toastify";
 
-const Login = ({ setToken }) => {
+const Login = ({ setToken, setRole }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const onSubmitHandler = async (e) => {
@@ -18,6 +18,7 @@ const Login = ({ setToken }) => {
 
       if (response.data.success) {
         setToken(response.data.token);
+        setRole(response.data.role);
       } else {
         toast.error(response.data.message);
       }

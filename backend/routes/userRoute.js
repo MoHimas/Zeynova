@@ -8,7 +8,6 @@ import {
   listUsers,
 } from "../controllers/userController.js";
 import authUser from "../middleware/auth.js";
-import adminAuth from "../middleware/adminAuth.js";
 import roleAuth from "../middleware/roleAuth.js";
 
 const userRouter = express.Router();
@@ -18,6 +17,6 @@ userRouter.post("/login", loginUser);
 userRouter.post("/admin", adminLogin);
 userRouter.post("/profile", authUser, roleAuth(["customer"]), getProfile);
 userRouter.post("/update-profile", authUser, roleAuth(["customer"]), updateProfile);
-userRouter.get("/list", adminAuth, listUsers);
+userRouter.get("/list", authUser, roleAuth(["admin", "support"]), listUsers);
 
 export default userRouter;

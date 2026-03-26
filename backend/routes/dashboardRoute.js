@@ -1,9 +1,10 @@
 import express from 'express';
 import { getDashboardStats } from '../controllers/dashboardController.js';
-import adminAuth from '../middleware/adminAuth.js';
+import authUser from '../middleware/auth.js';
+import roleAuth from '../middleware/roleAuth.js';
 
 const dashboardRouter = express.Router();
 
-dashboardRouter.get('/stats', adminAuth, getDashboardStats);
+dashboardRouter.get('/stats', authUser, roleAuth(['admin']), getDashboardStats);
 
 export default dashboardRouter;

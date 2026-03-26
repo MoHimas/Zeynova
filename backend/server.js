@@ -22,7 +22,6 @@ connectCloudinary();
 
 // security middlewares
 app.use(helmet());
-app.use(mongoSanitize());
 
 // rate limiter for auth routes (login/register)
 const authLimiter = rateLimit({
@@ -57,6 +56,12 @@ app.use(
 
 // body parser with size limit
 app.use(express.json({ limit: "10kb" }));
+app.use((req, res, next) => {
+  ["body", "query", "params", "headers"].forEach((k) => {
+    if (req[k]) mongoSanitize.sanitize(req[k]);
+  });
+  next();
+});
 
 // api endpoints
 app.use("/api/user", authLimiter, userRouter);

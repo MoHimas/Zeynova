@@ -7,13 +7,15 @@ import {
   updateProduct,
 } from "../controllers/productController.js";
 import upload from "../middleware/multer.js";
-import adminAuth from "../middleware/adminAuth.js";
+import authUser from "../middleware/auth.js";
+import roleAuth from "../middleware/roleAuth.js";
 
 const productRouter = express.Router();
 
 productRouter.post(
   "/add",
-  adminAuth,
+  authUser,
+  roleAuth(["admin"]),
   upload.fields([
     { name: "image1", maxCount: 1 },
     { name: "image2", maxCount: 1 },
@@ -24,7 +26,8 @@ productRouter.post(
 );
 productRouter.post(
   "/update",
-  adminAuth,
+  authUser,
+  roleAuth(["admin"]),
   upload.fields([
     { name: "image1", maxCount: 1 },
     { name: "image2", maxCount: 1 },
@@ -33,7 +36,7 @@ productRouter.post(
   ]),
   updateProduct
 );
-productRouter.post("/remove", adminAuth, removeProduct);
+productRouter.post("/remove", authUser, roleAuth(["admin"]), removeProduct);
 productRouter.post("/single", singleProduct);
 productRouter.get("/list", listProduct);
 

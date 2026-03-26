@@ -7,15 +7,14 @@ import {
   updateStatus,
   verifyStripe,
 } from "../controllers/orderController.js";
-import adminAuth from "../middleware/adminAuth.js";
 import authUser from "../middleware/auth.js";
 import roleAuth from "../middleware/roleAuth.js";
 
 const orderRouter = express.Router();
 
 // admin features
-orderRouter.post("/list", adminAuth, allOrders);
-orderRouter.post("/status", adminAuth, updateStatus);
+orderRouter.post("/list", authUser, roleAuth(["admin", "support"]), allOrders);
+orderRouter.post("/status", authUser, roleAuth(["admin", "support"]), updateStatus);
 
 // payment features (customer only)
 orderRouter.post("/place", authUser, roleAuth(["customer"]), placeOrder);

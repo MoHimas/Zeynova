@@ -22,31 +22,45 @@ const App = () => {
   const [token, setToken] = useState(
     localStorage.getItem("token") ? localStorage.getItem("token") : ""
   );
+  const [role, setRole] = useState(
+    localStorage.getItem("role") ? localStorage.getItem("role") : ""
+  );
 
   useEffect(() => {
     localStorage.setItem("token", token);
   }, [token]);
 
+  useEffect(() => {
+    localStorage.setItem("role", role);
+  }, [role]);
+
   return (
     <div className="bg-gray-50 min-h-screen">
       <ToastContainer />
       {token === "" ? (
-        <Login setToken={setToken} />
+        <Login setToken={setToken} setRole={setRole} />
       ) : (
         <>
           <Navbar setToken={setToken} />
           <hr />
           <div className="flex w-full">
-            <Sidebar />
+            <Sidebar role={role} />
             <div className="w-[70%] mx-auto ml-[max(5vw,25px)] my-8 text-gray-600 text-base">
               <Routes>
-                <Route path="/add" element={<Add token={token} />} />
-                <Route path="/list" element={<List token={token} />} />
-                <Route path="/edit/:id" element={<Edit token={token} />} />
-                <Route path="/users" element={<Users token={token} backendUrl={backendUrl} />} />
+                {/* Routes accessible to both Admin and Support */}
                 <Route path="/orders" element={<Orders token={token} />} />
+                <Route path="/users" element={<Users token={token} backendUrl={backendUrl} />} />
                 <Route path="/support" element={<Support token={token} backendUrl={backendUrl} />} />
-                <Route path="/dashboard" element={<Dashboard token={token} backendUrl={backendUrl} currency={currency} />} />
+                
+                {/* Admin-only routes */}
+                {role !== "support" && (
+                  <>
+                    <Route path="/add" element={<Add token={token} />} />
+                    <Route path="/list" element={<List token={token} />} />
+                    <Route path="/edit/:id" element={<Edit token={token} />} />
+                    <Route path="/dashboard" element={<Dashboard token={token} backendUrl={backendUrl} currency={currency} />} />
+                  </>
+                )}
               </Routes>
             </div>
           </div>
