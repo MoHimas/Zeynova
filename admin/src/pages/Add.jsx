@@ -80,13 +80,13 @@ const Add = ({ token }) => {
       <div>
         <p className="mb-2">Upload Image</p>
 
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-3">
           {["image1", "image2", "image3", "image4"].map((id, index) => {
             const image = [image1, image2, image3, image4][index];
             const setImage = [setImage1, setImage2, setImage3, setImage4][index];
             return (
               <label htmlFor={id} key={id}>
-                <div className="w-20 h-20 border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-black transition-colors overflow-hidden">
+                <div className="w-24 h-24 sm:w-20 sm:h-20 border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-black transition-colors overflow-hidden rounded bg-gray-50">
                   {!image ? (
                     <UploadCloud className="w-8 h-8 text-gray-400" />
                   ) : (

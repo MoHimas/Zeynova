@@ -45,7 +45,7 @@ const App = () => {
           <hr />
           <div className="flex w-full">
             <Sidebar role={role} />
-            <div className="w-[70%] mx-auto ml-[max(5vw,25px)] my-8 text-gray-600 text-base">
+            <div className="flex-1 mx-auto px-4 sm:px-8 ml-[max(2vw,10px)] sm:ml-[max(5vw,25px)] my-8 text-gray-600 text-base overflow-x-hidden">
               <Routes>
                 {/* Routes accessible to both Admin and Support */}
                 <Route path="/orders" element={<Orders token={token} />} />

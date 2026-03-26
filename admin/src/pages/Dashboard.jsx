@@ -161,33 +161,57 @@ const Dashboard = ({ token, backendUrl, currency }) => {
 
       <div className="bg-white rounded shadow-sm p-6">
         <h3 className="text-lg font-medium mb-4">Recent Orders</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b">
-                <th className="py-2">Order ID</th>
-                <th className="py-2">Customer</th>
-                <th className="py-2">Amount</th>
-                <th className="py-2">Status</th>
-                <th className="py-2">Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {stats?.recentOrders?.map((order, index) => (
-                <tr key={index} className="border-b">
-                  <td className="py-3 text-xs font-mono">{order._id}</td>
-                  <td className="py-3">{order.address?.firstName} {order.address?.lastName}</td>
-                  <td className="py-3">{currency}{order.amount}</td>
-                  <td className="py-3">
-                    <span className={`px-2 py-0.5 rounded text-[10px] ${order.status === 'Delivered' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}>
-                      {order.status}
-                    </span>
-                  </td>
-                  <td className="py-3 text-gray-400">{new Date(order.date).toLocaleDateString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="flex flex-col gap-1">
+          {/* Header for desktop */}
+          <div className="hidden md:grid grid-cols-[1.5fr_2fr_1fr_1fr_1fr] border-b pb-2 text-sm font-semibold text-gray-600">
+            <p>Order ID</p>
+            <p>Customer</p>
+            <p>Amount</p>
+            <p>Status</p>
+            <p>Date</p>
+          </div>
+          
+          {stats?.recentOrders?.map((order, index) => (
+            <div key={index} className="grid grid-cols-1 md:grid-cols-[1.5fr_2fr_1fr_1fr_1fr] items-center gap-2 md:gap-0 py-3 border-b last:border-0 text-[13px] md:text-sm text-gray-700">
+              {/* Order ID */}
+              <div className="flex md:block items-center justify-between">
+                <span className="md:hidden font-bold text-gray-400">Order ID:</span>
+                <p className="text-xs font-mono truncate max-w-[150px] md:max-w-none">{order._id}</p>
+              </div>
+              
+              {/* Customer */}
+              <div className="flex md:block items-center justify-between">
+                <span className="md:hidden font-bold text-gray-400">Customer:</span>
+                <p>{order.address?.firstName} {order.address?.lastName}</p>
+              </div>
+
+              {/* Amount */}
+              <div className="flex md:block items-center justify-between">
+                <span className="md:hidden font-bold text-gray-400">Amount:</span>
+                <p className="font-semibold md:font-normal">{currency}{order.amount}</p>
+              </div>
+
+              {/* Status */}
+              <div className="flex md:block items-center justify-between">
+                <span className="md:hidden font-bold text-gray-400">Status:</span>
+                <div>
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-medium ${order.status === 'Order Delivered' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}>
+                    {order.status}
+                  </span>
+                </div>
+              </div>
+
+              {/* Date */}
+              <div className="flex md:block items-center justify-between">
+                <span className="md:hidden font-bold text-gray-400">Date:</span>
+                <p className="text-gray-500 md:text-inherit">{new Date(order.date).toLocaleDateString()}</p>
+              </div>
+            </div>
+          ))}
+
+          {(!stats?.recentOrders || stats.recentOrders.length === 0) && (
+            <p className="text-center py-10 text-gray-400 italic">No recent orders found.</p>
+          )}
         </div>
       </div>
     </div>
